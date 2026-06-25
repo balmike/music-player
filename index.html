@@ -167,6 +167,71 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 .btn-ok:hover{background:var(--accent);}
 .progress-bar-wrap{margin-top:8px;background:var(--surface);border-radius:4px;height:4px;}
 .progress-bar-inner{height:100%;border-radius:4px;background:var(--accent3);transition:width 0.3s;}
+  /* Mobile Responsive */
+@media (max-width: 768px) {
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .main {
+    width: 100%;
+  }
+
+  .player-bar {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+
+  .add-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .track-header {
+    display: none;
+  }
+
+  .track-row {
+    grid-template-columns: 36px 48px 1fr;
+  }
+
+  .track-row > *:nth-child(4),
+  .track-row > *:nth-child(5),
+  .track-row > *:nth-child(6) {
+    display: none;
+  }
+
+  .modal {
+    width: 95% !important;
+    max-width: 95% !important;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
 </style>
 </head>
 <body>
