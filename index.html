@@ -167,74 +167,87 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 .btn-ok:hover{background:var(--accent);}
 .progress-bar-wrap{margin-top:8px;background:var(--surface);border-radius:4px;height:4px;}
 .progress-bar-inner{height:100%;border-radius:4px;background:var(--accent3);transition:width 0.3s;}
-  /* Mobile Responsive */
-@media (max-width: 768px) {
-
-  .app {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    min-height: 100vh;
+/* ── Mobile responsive ──────────────────────────────── */
+@media (max-width: 768px){
+  .app{
+    grid-template-columns:1fr;
+    grid-template-rows:1fr 130px;
+    height:100vh;
+    height:100dvh;
   }
-
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
+  .sidebar{
+    position:fixed;
+    left:0; top:0; bottom:0;
+    width:240px;
+    z-index:300;
+    transform:translateX(-100%);
+    transition:transform 0.25s ease;
+    box-shadow:2px 0 20px #00000066;
   }
-
-  .main {
-    width: 100%;
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-overlay{
+    position:fixed; inset:0; background:#00000088;
+    z-index:299; display:none;
   }
-
-  .player-bar {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    padding: 12px;
-    gap: 10px;
+  .sidebar-overlay.show{display:block;}
+  .main{grid-column:1;}
+  .mobile-menu-btn{
+    display:flex!important;
+    align-items:center;
+    justify-content:center;
+    width:34px;height:34px;
+    border-radius:8px;
+    background:var(--surface);
+    border:1px solid var(--border2);
+    color:var(--text2);
+    cursor:pointer;
+    flex-shrink:0;
   }
-
-  .topbar {
-    flex-direction: column;
-    align-items: stretch;
+  .mobile-menu-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;}
+  .topbar{flex-wrap:wrap;}
+  .topbar-title{font-size:17px;}
+  .search-box{flex:1 1 100%;order:3;margin-top:8px;}
+  .search-box input{width:100%;}
+  .add-toolbar{flex-wrap:wrap;}
+  .add-btn{flex:1;justify-content:center;padding:9px 10px;font-size:12px;}
+  .track-header{display:none;}
+  .track-row{
+    grid-template-columns:44px 1fr 32px;
+    grid-template-areas:"art info like";
+    padding:8px 14px;
+    gap:10px;
   }
-
-  .search-box input {
-    width: 100%;
+  .track-row .t-num{display:none;}
+  .track-row .t-art{grid-area:art;width:44px;height:44px;}
+  .track-row .t-info{grid-area:info;}
+  .track-row .t-album{display:none;}
+  .track-row .t-dur{display:none;}
+  .track-row .t-like{grid-area:like;}
+  .player-bar{
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto;
+    padding:10px 14px;
+    gap:8px;
+    row-gap:6px;
   }
-
-  .add-toolbar {
-    flex-wrap: wrap;
-  }
-
-  .track-header {
-    display: none;
-  }
-
-  .track-row {
-    grid-template-columns: 36px 48px 1fr;
-  }
-
-  .track-row > *:nth-child(4),
-  .track-row > *:nth-child(5),
-  .track-row > *:nth-child(6) {
-    display: none;
-  }
-
-  .modal {
-    width: 95% !important;
-    max-width: 95% !important;
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
+  .now-playing{order:1;}
+  .controls{order:2;}
+  .vol-row{display:none;}
+  .ctrl-row{gap:24px;}
+  .ctrl-btn svg{width:20px;height:20px;}
+  .play-main{width:42px;height:42px;}
+  .play-main svg{width:18px;height:18px;}
+  .modal{width:92vw;padding:18px;}
+  .tabs{font-size:11px;}
+}
+@media (max-width: 420px){
+  .now-title{font-size:12px;}
+  .topbar-title{font-size:16px;}
 }
 </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="app">
   <!-- Sidebar -->
   <div class="sidebar">
@@ -244,6 +257,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       </div>
       <span class="logo-text">My Music</span>
     </div>
+    <div style="padding:4px 16px 10px;font-size:11px;color:var(--text3);border-bottom:1px solid var(--border);">Made with ❤️ by BKV</div>
     <div class="sidebar-section">Library</div>
     <div class="nav-item active" onclick="selectView('all',this)">
       <svg viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
@@ -266,6 +280,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <!-- Main -->
   <div class="main">
     <div class="topbar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
       <span class="topbar-title" id="view-title">All songs</span>
       <div class="search-box">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -671,6 +688,7 @@ function selectView(id, el, name){
   el.classList.add('active');
   document.getElementById('view-title').textContent = name || el.textContent.trim().replace(/\d+$/,'').trim();
   renderTracks();
+  closeSidebar();
 }
 
 // ── Modals ─────────────────────────────────────────────
@@ -859,6 +877,16 @@ function commitSongs(){
   songs.push(...pendingSongs);
   pendingSongs = [];
   closeModal(); renderTracks(); updateCounts();
+}
+
+// ── Mobile sidebar toggle ───────────────────────────────
+function toggleSidebar(){
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('show');
+}
+function closeSidebar(){
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
 }
 
 // ── Init ──────────────────────────────────────────────
