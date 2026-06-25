@@ -455,17 +455,20 @@ async function loadFromR2(){
   }
   showLoadingBanner(true, 'Loading your collection…');
   try{
-    const res = await fetch(R2_LISTING_URL);
+    const res = await fetch(R2_LISTING_URL, { cache: 'no-store' });
+    if(!res.ok) throw new Error('Worker responded with status ' + res.status);
     const files = await res.json();
     let loaded = 0;
     for(const f of files){
+      // Encode each path segment so spaces/special chars in filenames work on all browsers
+      const safeUrl = f.url.replace(f.key, encodeURIComponent(f.key).replace(/%2F/g, '/'));
       const song = {
         id: 'r2_' + f.key,
         title: cleanTitleFromKey(f.key),
         artist: '',
         album: '',
         art: '',
-        url: f.url,
+        url: safeUrl,
         local: false,
         liked: false,
         playlist: 'all',
@@ -480,9 +483,11 @@ async function loadFromR2(){
     }
   }catch(e){
     console.error('Failed to load R2 bucket listing:', e);
-  } finally {
-    showLoadingBanner(false);
+    showLoadingBanner(true, '⚠ Could not load bucket: ' + e.message);
+    setTimeout(() => showLoadingBanner(false), 6000);
+    return;
   }
+  showLoadingBanner(false);
 }
 
 async function enrichSong(song){
